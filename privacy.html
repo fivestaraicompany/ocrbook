@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title data-i18n="privacy_meta_title">OCRBook – Privacy Policy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content=""
+    data-i18n-attr="content:privacy_meta_desc"
+  />
+  <link rel="stylesheet" href="./lang-selector.css" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #050816;
+      --card: #0c1020;
+      --fg: #f5f7ff;
+      --fg-soft: #a2abc6;
+      --accent: #4f9cff;
+      --border: #29324a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        sans-serif;
+      background: radial-gradient(circle at top, #1a2648 0, var(--bg) 45%);
+      color: var(--fg);
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      max-width: 840px;
+      width: 100%;
+    }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 0 0 6px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--fg-soft);
+    }
+
+    main {
+      background: rgba(5, 8, 22, 0.96);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 20px 18px 18px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    @media (min-width: 720px) {
+      main {
+        padding: 26px 26px 22px;
+      }
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--fg-soft);
+      margin: 0 0 10px;
+    }
+
+    ul {
+      margin: 0 0 10px 18px;
+      padding: 0;
+    }
+
+    li {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--fg-soft);
+      margin-bottom: 4px;
+    }
+
+    strong {
+      color: var(--fg);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 9px;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .beta {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin: 10px 0 12px;
+    }
+
+    .box {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .small {
+      font-size: 11px;
+      color: var(--fg-soft);
+    }
+
+    .kr-note {
+      font-size: 11px;
+      line-height: 1.6;
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      padding: 8px 10px;
+      margin-top: 6px;
+      color: var(--fg-soft);
+    }
+
+    footer {
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--fg-soft);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="lang" aria-label="Language">
+        <button type="button" id="langOpen" class="lang-open" aria-haspopup="dialog" aria-controls="langDialog" aria-expanded="false" title="Language">
+          <span aria-hidden="true">🌐</span>
+          <span id="langCurrent">EN</span>
+        </button>
+
+        <!-- Hidden language buttons for i18n.js (kept for compatibility) -->
+        <div id="langHidden" hidden>
+          <button type="button" class="sr-only" data-lang-btn="en" aria-pressed="true">en</button>
+          <button type="button" class="sr-only" data-lang-btn="ko" aria-pressed="false">ko</button>
+          <button type="button" class="sr-only" data-lang-btn="uk" aria-pressed="false">uk</button>
+          <button type="button" class="sr-only" data-lang-btn="ar" aria-pressed="false">ar</button>
+          <button type="button" class="sr-only" data-lang-btn="ca" aria-pressed="false">ca</button>
+          <button type="button" class="sr-only" data-lang-btn="zh-Hans" aria-pressed="false">zh-Hans</button>
+          <button type="button" class="sr-only" data-lang-btn="zh-Hant" aria-pressed="false">zh-Hant</button>
+          <button type="button" class="sr-only" data-lang-btn="hr" aria-pressed="false">hr</button>
+          <button type="button" class="sr-only" data-lang-btn="cs" aria-pressed="false">cs</button>
+          <button type="button" class="sr-only" data-lang-btn="da" aria-pressed="false">da</button>
+          <button type="button" class="sr-only" data-lang-btn="nl" aria-pressed="false">nl</button>
+          <button type="button" class="sr-only" data-lang-btn="fi" aria-pressed="false">fi</button>
+          <button type="button" class="sr-only" data-lang-btn="fr" aria-pressed="false">fr</button>
+          <button type="button" class="sr-only" data-lang-btn="de" aria-pressed="false">de</button>
+          <button type="button" class="sr-only" data-lang-btn="el" aria-pressed="false">el</button>
+          <button type="button" class="sr-only" data-lang-btn="fr-CA" aria-pressed="false">fr-CA</button>
+          <button type="button" class="sr-only" data-lang-btn="he" aria-pressed="false">he</button>
+          <button type="button" class="sr-only" data-lang-btn="hi" aria-pressed="false">hi</button>
+          <button type="button" class="sr-only" data-lang-btn="hu" aria-pressed="false">hu</button>
+          <button type="button" class="sr-only" data-lang-btn="id" aria-pressed="false">id</button>
+          <button type="button" class="sr-only" data-lang-btn="it" aria-pressed="false">it</button>
+          <button type="button" class="sr-only" data-lang-btn="ja" aria-pressed="false">ja</button>
+          <button type="button" class="sr-only" data-lang-btn="ms" aria-pressed="false">ms</button>
+          <button type="button" class="sr-only" data-lang-btn="nb" aria-pressed="false">nb</button>
+          <button type="button" class="sr-only" data-lang-btn="pl" aria-pressed="false">pl</button>
+          <button type="button" class="sr-only" data-lang-btn="pt-BR" aria-pressed="false">pt-BR</button>
+          <button type="button" class="sr-only" data-lang-btn="pt-PT" aria-pressed="false">pt-PT</button>
+          <button type="button" class="sr-only" data-lang-btn="ro" aria-pressed="false">ro</button>
+          <button type="button" class="sr-only" data-lang-btn="ru" aria-pressed="false">ru</button>
+          <button type="button" class="sr-only" data-lang-btn="sk" aria-pressed="false">sk</button>
+          <button type="button" class="sr-only" data-lang-btn="es-MX" aria-pressed="false">es-MX</button>
+          <button type="button" class="sr-only" data-lang-btn="es" aria-pressed="false">es</button>
+          <button type="button" class="sr-only" data-lang-btn="sv" aria-pressed="false">sv</button>
+          <button type="button" class="sr-only" data-lang-btn="th" aria-pressed="false">th</button>
+          <button type="button" class="sr-only" data-lang-btn="tr" aria-pressed="false">tr</button>
+          <button type="button" class="sr-only" data-lang-btn="vi" aria-pressed="false">vi</button>
+        </div>
+      </div>
+
+      <h1 data-i18n="privacy_title">OCRBook – Privacy Policy</h1>
+      <div class="subtitle" data-i18n="privacy_last_updated">Last updated: 21 November 2025</div>
+    </header>
+
+    <dialog id="langDialog" class="lang-dialog" aria-label="Select language">
+      <form method="dialog" class="lang-dialog-inner">
+        <div class="lang-dialog-head">
+          <div class="lang-dialog-title" data-i18n="lang_title">Language</div>
+          <button type="submit" class="lang-close" aria-label="Close">✕</button>
+        </div>
+
+        <div class="lang-search">
+          <input id="langSearch" type="search" placeholder="Search…" autocomplete="off" />
+        </div>
+
+        <div id="langList" class="lang-list" role="listbox" aria-label="Languages"></div>
+
+        <div class="lang-dialog-foot">
+          <button type="submit" class="btn" style="padding:10px 14px;" data-i18n="lang_done">Done</button>
+        </div>
+      </form>
+    </dialog>
+
+    <main>
+      <p data-i18n="privacy_intro">
+        This Privacy Policy explains how OCRBook ("the App") handles your
+        information. OCRBook is designed to process documents
+        <strong>on your device</strong> and to minimize any data that leaves
+        your device.
+      </p>
+
+      <div class="box">
+        <span class="tag" data-i18n="privacy_short_version_tag">Short version</span>
+        <p data-i18n="privacy_short_version">
+          OCRBook does not create accounts, does not use in-app analytics, does
+          not show ads, and does not collect personal information from your
+          documents. Your PDFs, images, and OCR text stay on your device unless
+          you explicitly choose to share them or use the optional AI integration
+          described below.
+        </p>
+      </div>
+
+      <h2 data-i18n="privacy_section1_title">1. Data we do <em>not</em> collect</h2>
+      <p data-i18n="privacy_section1_intro">OCRBook does not:</p>
+      <ul>
+        <li data-i18n="privacy_section1_item1">Create user accounts or require you to sign in.</li>
+        <li data-i18n="privacy_section1_item2">Collect your name, email address, or contact details by default.</li>
+        <li data-i18n="privacy_section1_item3">Upload your documents, OCR text, or usage history to our own servers.</li>
+        <li data-i18n="privacy_section1_item4">Use third-party analytics SDKs or advertising SDKs.</li>
+        <li data-i18n="privacy_section1_item5">Sell, rent, or trade any personal data.</li>
+      </ul>
+
+      <h2 data-i18n="privacy_section2_title">2. Documents and OCR text (on-device)</h2>
+      <p data-i18n="privacy_section2_intro">
+        When you import a PDF or image into OCRBook, the file and the
+        resulting OCR text are stored locally on your device's storage, under
+        your user account. Typical examples:
+      </p>
+      <ul>
+        <li data-i18n="privacy_section2_item1">Scanned books in PDF format.</li>
+        <li data-i18n="privacy_section2_item2">Document images imported from the Files app or other apps.</li>
+        <li data-i18n="privacy_section2_item3">OCR text generated from those PDFs or images.</li>
+      </ul>
+      <p data-i18n="privacy_section2_conclusion">
+        This data is only accessible to you and to the operating system (iOS,
+        iPadOS, or macOS) according to its standard app sandbox rules. The
+        developer of OCRBook cannot access this data.
+      </p>
+
+      <h2 data-i18n="privacy_section3_title">3. Optional Ollama / LLM integration (Beta)</h2>
+      <div class="beta">
+        <p>
+          <strong data-i18n="privacy_section3_beta_important">Important:</strong> <span data-i18n="privacy_section3_beta_text">The Ollama (or compatible local LLM
+          server) integration is an optional, <strong>beta</strong> feature.</span>
+        </p>
+      </div>
+      <p data-i18n="privacy_section3_intro">
+        If you choose to enable this feature, OCRBook can send selected text
+        (for example, a page or a passage) to an AI model running at a server
+        address you configure (such as an Ollama server on your local network).
+        This is used to provide features like summaries, explanations, or Q&amp;A
+        about your document.
+      </p>
+
+      <p><strong data-i18n="privacy_section3_data_title">What this means for your data:</strong></p>
+      <ul>
+        <li data-i18n="privacy_section3_data_item1">
+          OCRBook sends only the text you choose (and your prompt) to the
+          configured server endpoint.
+        </li>
+        <li data-i18n="privacy_section3_data_item2">
+          We <strong>do not</strong> operate this Ollama/LLM server. It may be
+          hosted on your own computer, your local network, or a server you
+          control.
+        </li>
+        <li data-i18n="privacy_section3_data_item3">
+          Any storage, logging, or secondary use of that text depends on
+          your chosen server's configuration, not on OCRBook.
+        </li>
+      </ul>
+
+      <p><strong data-i18n="privacy_section3_encryption_title">No segment / end-to-end encryption</strong></p>
+      <p data-i18n="privacy_section3_encryption_intro">
+        In the current beta implementation, OCRBook communicates with the
+        Ollama/LLM server typically over <code>http://</code> on a local
+        network or custom URL. This means:
+      </p>
+      <ul>
+        <li data-i18n="privacy_section3_encryption_item1">
+          Traffic between OCRBook and the Ollama server
+          <strong>is not protected by transport-layer encryption</strong>
+          (no HTTPS / TLS, no end-to-end or segment encryption).
+        </li>
+        <li data-i18n="privacy_section3_encryption_item2">
+          On shared or untrusted networks, technically skilled third parties
+          may be able to inspect or intercept the transmitted text.
+        </li>
+        <li data-i18n="privacy_section3_encryption_item3">
+          You should only enable this feature on networks and servers you
+          trust (for example, your own private LAN at home).
+        </li>
+      </ul>
+
+      
+
+      <p class="small" data-i18n="privacy_section3_future">
+        Future versions may add HTTPS/TLS or other encryption options, but in
+        this beta implementation you are responsible for the security and
+        configuration of the Ollama/LLM server and the network around it.
+      </p>
+
+      <h2 data-i18n="privacy_section4_title">4. Third-party services and system features</h2>
+      <p data-i18n="privacy_section4_intro">
+        OCRBook may interact with the following system-level or third-party
+        components:
+      </p>
+      <ul>
+        <li data-i18n="privacy_section4_item1">
+          <strong>Apple Files / iCloud Drive:</strong> If you store PDFs in
+          iCloud Drive or other cloud folders, those services handle the data
+          according to their own privacy policies.
+        </li>
+        <li data-i18n="privacy_section4_item2">
+          <strong>System text-to-speech (TTS):</strong> If you use TTS, selected
+          text is sent to the OS's built-in speech engine. This processing is
+          managed by Apple's platform, not by OCRBook.
+        </li>
+        <li data-i18n="privacy_section4_item3">
+          <strong>Share sheets / export:</strong> When you share or export text
+          or files, they are passed to other apps or services you select, each
+          with its own privacy practices.
+        </li>
+      </ul>
+      <p data-i18n="privacy_section4_conclusion">
+        OCRBook does not control how those external services store or process
+        your data. Please review their respective privacy policies if you have
+        concerns.
+      </p>
+
+      <h2 data-i18n="privacy_section5_title">5. Data retention and deletion</h2>
+      <p data-i18n="privacy_section5_intro">
+        All documents and OCR results are stored on your device until you choose
+        to delete them. You can:
+      </p>
+      <ul>
+        <li data-i18n="privacy_section5_item1">
+          Delete individual PDFs or text results from within the app (if the
+          app provides such UI), or
+        </li>
+        <li data-i18n="privacy_section5_item2">
+          Remove the app itself, which will normally delete its local data
+          according to the operating system's standard behavior.
+        </li>
+      </ul>
+      <p data-i18n="privacy_section5_conclusion">
+        If you used the optional Ollama/LLM integration, any copies of your text
+        stored on that server must be deleted through that server's own tools or
+        configuration. OCRBook cannot remove data from servers it does not
+        control.
+      </p>
+
+      <h2 data-i18n="privacy_section6_title">6. Children's privacy</h2>
+      <p data-i18n="privacy_section6_text">
+        OCRBook is not designed to collect personal information from anyone,
+        including children. We do not knowingly collect personal data from
+        children under any age threshold because we do not collect such data
+        from any user by default.
+      </p>
+
+      <h2 data-i18n="privacy_section7_title">7. Changes to this policy</h2>
+      <p data-i18n="privacy_section7_text">
+        We may update this Privacy Policy to reflect improvements to the app,
+        changes in platform capabilities, or legal requirements. When we do, we
+        will update the "Last updated" date at the top of this page. For
+        significant changes, we may also mention it in the app's release notes
+        or App Store listing.
+      </p>
+
+      <h2 data-i18n="privacy_section8_title">8. Contact</h2>
+      <p data-i18n="privacy_section8_text">
+        If you have any questions or concerns about this Privacy Policy or how
+        OCRBook handles your data, please contact the developer using the
+        contact information provided in the App Store listing (for example, the
+        "App Support" or "Developer Website" link).
+      </p>
+
+      <footer>
+        <span>© <span id="year"></span> OCRBook. <span data-i18n="footer_rights">All rights reserved.</span></span>
+        <span data-i18n="privacy_version">Version 1.0 – Draft for global launch</span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="./i18n.js"></script>
+  <script src="./lang-selector.js"></script>
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear().toString();
+  </script>
+</body>
+</html>

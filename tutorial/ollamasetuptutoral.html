@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title data-i18n="meta_title">OCRBook — Ollama Setup Tutorial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="" data-i18n-attr="content:meta_desc" />
+  <meta name="robots" content="index,follow" />
+  <link rel="stylesheet" href="../lang-selector.css" />
+  <style>
+    :root {
+      --bg:#ffffff; --panel:#ffffff; --fg:#0b1220; --muted:#5a647a;
+      --border: rgba(15, 23, 42, 0.10);
+      --shadow: 0 18px 60px rgba(2, 6, 23, 0.10);
+      --accent:#2563eb; --accent2:#7c3aed; --soft: rgba(37, 99, 235, 0.10);
+      --radius: 18px; --max: 980px; --pad: 22px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:#050816; --panel: rgba(5, 8, 22, 0.92); --fg:#f5f7ff; --muted:#a2abc6;
+        --border: rgba(148, 163, 184, 0.18);
+        --shadow: 0 24px 90px rgba(0,0,0,0.70);
+        --accent:#4f9cff; --accent2:#8a6dff; --soft: rgba(79,156,255,0.12);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background:
+        radial-gradient(900px 520px at 20% 0%, rgba(37,99,235,0.22), transparent 55%),
+        radial-gradient(900px 520px at 80% 0%, rgba(124,58,237,0.18), transparent 55%),
+        var(--bg);
+      color: var(--fg);
+      line-height: 1.65;
+    }
+    a{ color: inherit; text-decoration:none; }
+    a:hover{ color: var(--accent); }
+
+    .wrap{ max-width: var(--max); margin:0 auto; padding: 20px var(--pad) 48px; }
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding:10px 0 18px;
+      position: sticky; top: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0));
+      backdrop-filter: blur(10px);
+    }
+    @media (prefers-color-scheme: dark) {
+      header{ background: linear-gradient(to bottom, rgba(5,8,22,0.88), rgba(5,8,22,0)); }
+    }
+
+    .brand{ display:flex; align-items:center; gap:12px; min-width: 240px; }
+    .mark{
+      width:40px; height:40px; border-radius:14px;
+      background: conic-gradient(from 180deg, var(--accent), var(--accent2), #2df2c8, var(--accent));
+      box-shadow: 0 0 28px rgba(37,99,235,0.35);
+      display:grid; place-items:center;
+      color:#050816; font-weight: 800;
+    }
+    .brand h1{ font-size:16px; font-weight: 750; letter-spacing: .2px; }
+    .tagline{ font-size:12px; color: var(--muted); }
+
+    nav{ display:flex; align-items:center; gap:14px; font-size:14px; color: var(--muted); flex-wrap: wrap; justify-content: flex-end; }
+    nav a{ padding:8px 10px; border-radius:999px; }
+    nav a:hover{ background: var(--soft); color: var(--accent); }
+
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 6px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .hero{ padding: 26px; display:grid; gap: 14px; }
+    .hero h2{
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+    .hero p{ color: var(--muted); font-size: 16px; max-width: 70ch; }
+
+    .warn{
+      margin-top: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      background: rgba(234, 179, 8, 0.10);
+      padding: 14px;
+    }
+    .warn b{ display:block; margin-bottom: 6px; }
+    .warn p{ color: var(--muted); font-size: 14px; }
+
+    section{ padding: 22px 26px; border-top: 1px solid var(--border); }
+    .sec-head{ display:flex; flex-wrap:wrap; gap: 10px; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+    .sec-head h3{ font-size: 18px; }
+    .sec-sub{ color: var(--muted); font-size: 14px; }
+
+    .steps{ display:grid; gap: 12px; }
+    .step{
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.55);
+      padding: 14px;
+    }
+    @media (prefers-color-scheme: dark) { .step { background: rgba(10,16,34,0.45); } }
+    .kicker{
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent);
+      display:inline-block;
+      margin-bottom: 6px;
+    }
+    .step strong{ display:block; margin-bottom: 6px; }
+    .step p{ color: var(--muted); font-size: 14px; }
+
+    pre{
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.65);
+      overflow:auto;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    @media (prefers-color-scheme: dark) { pre { background: rgba(10,16,34,0.55); } }
+
+    details{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.55);
+    }
+    @media (prefers-color-scheme: dark) { details { background: rgba(10,16,34,0.45); } }
+    details + details{ margin-top: 10px; }
+    summary{ cursor: pointer; font-weight: 700; }
+
+    footer{
+      padding: 14px 26px 20px;
+      display:flex; flex-wrap:wrap; justify-content:space-between; gap: 10px;
+      color: var(--muted); font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .footlinks{ display:flex; gap: 14px; flex-wrap:wrap; }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 14px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.65);
+      font-weight: 700; font-size: 14px;
+    }
+    @media (prefers-color-scheme: dark) { .btn { background: rgba(10,16,34,0.55); } }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="mark">O</div>
+        <div>
+          <h1 data-i18n="brand">OCRBook</h1>
+          <div class="tagline" data-i18n="tagline">Ollama setup tutorial</div>
+        </div>
+      </div>
+
+      <nav aria-label="Primary">
+        <a class="btn" href="../index.html" data-i18n="nav_back">Back to Home</a>
+        <a href="#steps" data-i18n="nav_steps">Steps</a>
+        <a href="#security" data-i18n="nav_security">Security</a>
+        <a href="#troubleshooting" data-i18n="nav_troubleshooting">Troubleshooting</a>
+      </nav>
+
+      <div class="lang" aria-label="Language">
+        <button type="button" id="langOpen" class="lang-open" aria-haspopup="dialog" aria-controls="langDialog" aria-expanded="false" title="Language">
+          <span aria-hidden="true">🌐</span>
+          <span id="langCurrent">EN</span>
+        </button>
+
+        <!-- Hidden language buttons for i18n.js (kept for compatibility) -->
+        <div id="langHidden" hidden>
+          <button type="button" class="sr-only" data-lang-btn="en" aria-pressed="true">en</button>
+          <button type="button" class="sr-only" data-lang-btn="ko" aria-pressed="false">ko</button>
+          <button type="button" class="sr-only" data-lang-btn="uk" aria-pressed="false">uk</button>
+          <button type="button" class="sr-only" data-lang-btn="ar" aria-pressed="false">ar</button>
+          <button type="button" class="sr-only" data-lang-btn="ca" aria-pressed="false">ca</button>
+          <button type="button" class="sr-only" data-lang-btn="zh-Hans" aria-pressed="false">zh-Hans</button>
+          <button type="button" class="sr-only" data-lang-btn="zh-Hant" aria-pressed="false">zh-Hant</button>
+          <button type="button" class="sr-only" data-lang-btn="hr" aria-pressed="false">hr</button>
+          <button type="button" class="sr-only" data-lang-btn="cs" aria-pressed="false">cs</button>
+          <button type="button" class="sr-only" data-lang-btn="da" aria-pressed="false">da</button>
+          <button type="button" class="sr-only" data-lang-btn="nl" aria-pressed="false">nl</button>
+          <button type="button" class="sr-only" data-lang-btn="fi" aria-pressed="false">fi</button>
+          <button type="button" class="sr-only" data-lang-btn="fr" aria-pressed="false">fr</button>
+          <button type="button" class="sr-only" data-lang-btn="de" aria-pressed="false">de</button>
+          <button type="button" class="sr-only" data-lang-btn="el" aria-pressed="false">el</button>
+          <button type="button" class="sr-only" data-lang-btn="fr-CA" aria-pressed="false">fr-CA</button>
+          <button type="button" class="sr-only" data-lang-btn="he" aria-pressed="false">he</button>
+          <button type="button" class="sr-only" data-lang-btn="hi" aria-pressed="false">hi</button>
+          <button type="button" class="sr-only" data-lang-btn="hu" aria-pressed="false">hu</button>
+          <button type="button" class="sr-only" data-lang-btn="id" aria-pressed="false">id</button>
+          <button type="button" class="sr-only" data-lang-btn="it" aria-pressed="false">it</button>
+          <button type="button" class="sr-only" data-lang-btn="ja" aria-pressed="false">ja</button>
+          <button type="button" class="sr-only" data-lang-btn="ms" aria-pressed="false">ms</button>
+          <button type="button" class="sr-only" data-lang-btn="nb" aria-pressed="false">nb</button>
+          <button type="button" class="sr-only" data-lang-btn="pl" aria-pressed="false">pl</button>
+          <button type="button" class="sr-only" data-lang-btn="pt-BR" aria-pressed="false">pt-BR</button>
+          <button type="button" class="sr-only" data-lang-btn="pt-PT" aria-pressed="false">pt-PT</button>
+          <button type="button" class="sr-only" data-lang-btn="ro" aria-pressed="false">ro</button>
+          <button type="button" class="sr-only" data-lang-btn="ru" aria-pressed="false">ru</button>
+          <button type="button" class="sr-only" data-lang-btn="sk" aria-pressed="false">sk</button>
+          <button type="button" class="sr-only" data-lang-btn="es-MX" aria-pressed="false">es-MX</button>
+          <button type="button" class="sr-only" data-lang-btn="es" aria-pressed="false">es</button>
+          <button type="button" class="sr-only" data-lang-btn="sv" aria-pressed="false">sv</button>
+          <button type="button" class="sr-only" data-lang-btn="th" aria-pressed="false">th</button>
+          <button type="button" class="sr-only" data-lang-btn="tr" aria-pressed="false">tr</button>
+          <button type="button" class="sr-only" data-lang-btn="vi" aria-pressed="false">vi</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="card">
+      <div class="hero">
+        <h2 data-i18n="hero_title">Connect OCRBook to your own Ollama server.</h2>
+        <p data-i18n="hero_sub">Install Ollama, run a model, then paste your server address into OCRBook to use local AI tools (summarize / translate / Q&A).</p>
+
+        <div class="warn" role="note" aria-label="Security warning">
+          <b data-i18n="warn_title">Important security note</b>
+          <p data-i18n="warn_body">If you connect over plain HTTP, traffic may not be encrypted. Use a trusted network, VPN, or HTTPS reverse proxy when possible.</p>
+        </div>
+      </div>
+
+      <section id="steps">
+        <div class="sec-head">
+          <h3 data-i18n="sec_steps_title">Setup steps</h3>
+          <div class="sec-sub" data-i18n="sec_steps_sub">Follow these steps on the machine that will run Ollama.</div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <span class="kicker">Step 1</span>
+            <strong data-i18n="s1_title">Install Ollama</strong>
+            <p data-i18n="s1_body">Download and install Ollama for your OS (macOS / Windows / Linux). After install, start the Ollama service/app.</p>
+          </div>
+
+          <div class="step">
+            <span class="kicker">Step 2</span>
+            <strong data-i18n="s2_title">Pull a model</strong>
+            <p data-i18n="s2_body">Open Terminal (or PowerShell) and run:  ollama pull llama3.2  (example). You can use any model you prefer.</p>
+          </div>
+
+          <div class="step">
+            <span class="kicker">Step 3</span>
+            <strong data-i18n="s3_title">Run a quick test</strong>
+            <p data-i18n="s3_body">Run:  ollama run llama3.2  then type a message to confirm it responds.</p>
+          </div>
+
+          <div class="step">
+            <span class="kicker">Step 4</span>
+            <strong data-i18n="s4_title">Allow access from your iPhone/iPad (LAN)</strong>
+            <p data-i18n="s4_body">By default Ollama may bind to localhost. To access from another device, set the host to 0.0.0.0 and allow the port in your firewall. Typical port is 11434.</p>
+
+            <div style="margin-top:10px; color: var(--muted); font-size: 13px;" data-i18n="s4_code_title">Example (macOS/Linux)</div>
+            <pre><code data-i18n="s4_code">export OLLAMA_HOST=0.0.0.0:11434
+ollama serve</code></pre>
+
+            <div style="margin-top:10px; color: var(--muted); font-size: 13px;" data-i18n="s4_code2_title">Example (Windows PowerShell)</div>
+            <pre><code data-i18n="s4_code2">$env:OLLAMA_HOST="0.0.0.0:11434"
+ollama serve</code></pre>
+          </div>
+
+          <div class="step">
+            <span class="kicker">Step 5</span>
+            <strong data-i18n="s5_title">Find your server address</strong>
+            <p data-i18n="s5_body">On the Ollama machine, find your local IP (e.g. 192.168.0.10). Your OCRBook server URL will look like:  http://192.168.0.10:11434</p>
+          </div>
+
+          <div class="step">
+            <span class="kicker">Step 6</span>
+            <strong data-i18n="s6_title">Connect in OCRBook</strong>
+            <p data-i18n="s6_body">In OCRBook settings, enable the Ollama integration and paste the server URL. Then try a small test prompt (summarize a short page).</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="security">
+        <div class="sec-head">
+          <h3 data-i18n="sec_security_title">Security (recommended)</h3>
+          <div class="sec-sub" data-i18n="sec_security_sub">If you use this outside your home network, protect it.</div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <strong data-i18n="sec1_title">Prefer VPN or HTTPS</strong>
+            <p data-i18n="sec1_body">For remote use, connect through VPN (recommended) or put Ollama behind an HTTPS reverse proxy (Caddy / Nginx).</p>
+          </div>
+          <div class="step">
+            <strong data-i18n="sec2_title">Restrict access</strong>
+            <p data-i18n="sec2_body">Limit inbound access to your LAN, or allow only your device IPs. Don’t expose 11434 publicly without protection.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="troubleshooting">
+        <div class="sec-head">
+          <h3 data-i18n="sec_ts_title">Troubleshooting</h3>
+          <div class="sec-sub"></div>
+        </div>
+
+        <details>
+          <summary data-i18n="t1_q">OCRBook can’t connect to my server.</summary>
+          <div style="margin-top:10px; color: var(--muted);" data-i18n="t1_a">Check that your phone and server are on the same network, the IP is correct, and port 11434 is allowed by firewall. Try opening the server URL in a browser.</div>
+        </details>
+        <details>
+          <summary data-i18n="t2_q">It works on the server but not from another device.</summary>
+          <div style="margin-top:10px; color: var(--muted);" data-i18n="t2_a">Ollama might be bound to localhost. Ensure OLLAMA_HOST is set to 0.0.0.0:11434 and the service was restarted.</div>
+        </details>
+        <details>
+          <summary data-i18n="t3_q">The connection is slow.</summary>
+          <div style="margin-top:10px; color: var(--muted);" data-i18n="t3_a">Use a smaller model, ensure the server has enough RAM/VRAM, and prefer wired Ethernet or strong Wi‑Fi. Large PDFs should be summarized in smaller chunks.</div>
+        </details>
+      </section>
+
+      <footer>
+        <div>© <span id="year"></span> OCRBook. FiveStar AI. <span data-i18n="footer_rights">All rights reserved.</span></div>
+        <div class="footlinks">
+          <a href="../index.html" data-i18n="footer_home">Home</a>
+          <a href="../privacy.html" data-i18n="footer_privacy">Privacy Policy</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <dialog id="langDialog" class="lang-dialog" aria-label="Select language">
+    <form method="dialog" class="lang-dialog-inner">
+      <div class="lang-dialog-head">
+        <div class="lang-dialog-title" data-i18n="lang_title">Language</div>
+        <button type="submit" class="lang-close" aria-label="Close">✕</button>
+      </div>
+
+      <div class="lang-search">
+        <input id="langSearch" type="search" placeholder="Search…" autocomplete="off" />
+      </div>
+
+      <div id="langList" class="lang-list" role="listbox" aria-label="Languages"></div>
+
+      <div class="lang-dialog-foot">
+        <button type="submit" class="btn" style="padding:10px 14px;" data-i18n="lang_done">Done</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="../i18n.js" data-i18n-prefix="ollama"></script>
+  <script src="../lang-selector.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear().toString();</script>
+</body>
+</html>

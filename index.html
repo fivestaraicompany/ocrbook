@@ -205,6 +205,7 @@
         <a href="#features" data-i18n="nav_features">Features</a>
         <a href="#quickstart" data-i18n="nav_quickstart">Quick Start</a>
         <a href="#ollama" data-i18n="nav_ollama">Ollama Setup</a>
+        <a href="#workflow" data-i18n="nav_workflow">Summarization</a>
         <a href="#faq" data-i18n="nav_faq">FAQ</a>
       </nav>
 
@@ -394,6 +395,63 @@
                 <span data-i18n="ollama_btn">Open Ollama setup tutorial</span>
               </a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <div class="sec-head">
+          <h3 data-i18n="sec_workflow_title">Smart summarization workflow</h3>
+          <div class="sec-sub" data-i18n="sec_workflow_sub">Long documents are split, summarized, and merged automatically — with a clear plan before OCRBook starts.</div>
+        </div>
+
+        <div class="grid cols3">
+          <div class="feat">
+            <b data-i18n="wf1_title">Configurable context length</b>
+            <p data-i18n="wf1_body">Match the plan to your Ollama server with a 4K–128K context length slider, so requests fit what your hardware can actually handle.</p>
+          </div>
+          <div class="feat">
+            <b data-i18n="wf2_title">See the plan before you run it</b>
+            <p data-i18n="wf2_body">OCRBook previews the exact strategy and number of server calls a summary will take — no surprises once it starts.</p>
+          </div>
+          <div class="feat">
+            <b data-i18n="wf3_title">Built for full books, not just pages</b>
+            <p data-i18n="wf3_body">When a document is too long for one response, OCRBook splits it into parts, summarizes each one, and merges the results automatically.</p>
+          </div>
+          <div class="feat">
+            <b data-i18n="wf4_title">Choose how long the summary should be</b>
+            <p data-i18n="wf4_body">Ask for a quick recap or a much longer, detailed summary — even for a very long book — and the workflow adjusts itself to match.</p>
+          </div>
+          <div class="feat">
+            <b data-i18n="wf5_title">Full-document chat that doesn't silently truncate</b>
+            <p data-i18n="wf5_body">Attach the whole document to chat. If it's too long for the context window, OCRBook scans it part by part for the answer instead of cutting it off.</p>
+          </div>
+          <div class="feat">
+            <b data-i18n="wf6_title">Cancel anytime</b>
+            <p data-i18n="wf6_body">Summarization and full-document chat run as a visible, step-by-step workflow that you can cancel at any point.</p>
+          </div>
+        </div>
+
+        <div class="grid cols4" style="margin-top:12px;">
+          <div class="step">
+            <span class="kicker" data-i18n="wf_strategy1_kicker">Fits in one request</span>
+            <strong data-i18n="wf_strategy1_title">Single pass</strong>
+            <p data-i18n="wf_strategy1_body">The document fits your chosen context window, so one request produces the full summary.</p>
+          </div>
+          <div class="step">
+            <span class="kicker" data-i18n="wf_strategy2_kicker">Longer document</span>
+            <strong data-i18n="wf_strategy2_title">Map-reduce</strong>
+            <p data-i18n="wf_strategy2_body">The document is split into parts, each part is summarized, then the partial summaries are merged into one.</p>
+          </div>
+          <div class="step">
+            <span class="kicker" data-i18n="wf_strategy3_kicker">Very long document</span>
+            <strong data-i18n="wf_strategy3_title">Hierarchical merge</strong>
+            <p data-i18n="wf_strategy3_body">Partial summaries are merged over several rounds before the final summary is written.</p>
+          </div>
+          <div class="step">
+            <span class="kicker" data-i18n="wf_strategy4_kicker">Longer summary requested</span>
+            <strong data-i18n="wf_strategy4_title">Sectional summary</strong>
+            <p data-i18n="wf_strategy4_body">For long, detailed summary requests, the result is written as multiple sections and stitched together on your device.</p>
           </div>
         </div>
       </section>

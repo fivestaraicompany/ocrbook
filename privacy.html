@@ -300,6 +300,38 @@
         </li>
       </ul>
 
+      <p><strong data-i18n="privacy_section3_fulldoc_title">Full-document summarization and chat</strong></p>
+      <p data-i18n="privacy_section3_fulldoc_intro">
+        OCRBook also offers optional "Full Summary" and "Attach full document"
+        features for a document you have already imported. When you use
+        these, OCRBook can send the complete text of that document — not
+        just a selected passage — to the configured Ollama/LLM server.
+      </p>
+      <ul>
+        <li data-i18n="privacy_section3_fulldoc_item1">
+          For long documents, OCRBook may automatically split the text into
+          multiple parts and send them across multiple requests (a
+          summarization or question-answering workflow) so that each request
+          fits within the context length you configure for your server.
+        </li>
+        <li data-i18n="privacy_section3_fulldoc_item2">
+          Before starting, you choose the context length and the desired
+          summary length, and OCRBook shows how many server calls the
+          resulting workflow will make.
+        </li>
+        <li data-i18n="privacy_section3_fulldoc_item3">
+          As with any other use of this optional feature, this text is sent
+          only to the server address you configure yourself; OCRBook does
+          not operate, and cannot access, that server.
+        </li>
+        <li data-i18n="privacy_section3_fulldoc_item4">
+          You can cancel a running summarization or full-document chat
+          workflow at any time. Canceling stops OCRBook from sending further
+          requests, though any request already sent to the server may still
+          be processed by it.
+        </li>
+      </ul>
+
       <p><strong data-i18n="privacy_section3_encryption_title">No segment / end-to-end encryption</strong></p>
       <p data-i18n="privacy_section3_encryption_intro">
         In the current beta implementation, OCRBook communicates with the

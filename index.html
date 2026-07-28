@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-i18n-languages="en">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title data-i18n="home_meta_title">OCRBook — Make Scanned Books Readable</title>
@@ -13,6 +13,7 @@
   <meta name="theme-color" content="#f7fbff" />
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+  <link rel="stylesheet" href="./lang-selector.css" />
 
   <style>
     :root {
@@ -29,6 +30,11 @@
       --white: #ffffff;
       --line: rgba(20, 65, 122, 0.12);
       --shadow: 0 24px 70px rgba(51, 91, 150, 0.14);
+      --border: var(--line);
+      --panel: var(--white);
+      --fg: var(--ink);
+      --accent: var(--blue);
+      --accentSoft: #edf5ff;
       --max: 1160px;
     }
 
@@ -155,9 +161,48 @@
       transition: transform 160ms ease, box-shadow 160ms ease;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: max-content;
+    }
+
     .header-cta:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 22px rgba(18, 33, 63, 0.18);
+    }
+
+    .site-header .lang {
+      padding: 2px;
+      border-color: var(--line);
+      background: #f4f9ff;
+    }
+
+    .site-header .lang-open {
+      min-height: 40px;
+      padding: 8px 11px;
+      color: #53627c;
+      font-weight: 850;
+    }
+
+    dialog.lang-dialog {
+      border-color: var(--line);
+      color: var(--ink);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    dialog.lang-dialog .lang-close,
+    dialog.lang-dialog .lang-search input,
+    dialog.lang-dialog .lang-item {
+      color: var(--ink);
+      background: #f8fbff;
+    }
+
+    dialog.lang-dialog .lang-item[aria-selected="true"] {
+      border-color: rgba(23, 105, 224, 0.18);
+      background: linear-gradient(135deg, #eaf4ff, #edfff7);
     }
 
     .hero {
@@ -993,10 +1038,46 @@
       <a href="#faq" data-i18n="home_nav_faq">FAQ</a>
     </nav>
 
-    <a class="header-cta" href="https://apps.apple.com/kr/app/ocrbook/id6755219492" data-i18n="home_nav_download">
-      Download
-    </a>
+    <div class="header-actions">
+      <div class="lang" aria-label="Language">
+        <button
+          type="button"
+          id="langOpen"
+          class="lang-open"
+          aria-haspopup="dialog"
+          aria-controls="langDialog"
+          aria-expanded="false"
+          title="Language"
+        >
+          <span aria-hidden="true">🌐</span>
+          <span id="langCurrent">EN</span>
+        </button>
+      </div>
+
+      <a class="header-cta" href="https://apps.apple.com/kr/app/ocrbook/id6755219492" data-i18n="home_nav_download">
+        Download
+      </a>
+    </div>
   </header>
+
+  <dialog id="langDialog" class="lang-dialog" aria-label="Select language">
+    <form method="dialog" class="lang-dialog-inner">
+      <div class="lang-dialog-head">
+        <div class="lang-dialog-title" data-i18n="lang_title">Language</div>
+        <button type="submit" class="lang-close" aria-label="Close">✕</button>
+      </div>
+
+      <div class="lang-search">
+        <input id="langSearch" type="search" placeholder="Search…" autocomplete="off" />
+      </div>
+
+      <div id="langList" class="lang-list" role="listbox" aria-label="Languages"></div>
+
+      <div class="lang-dialog-foot">
+        <button type="submit" class="button" data-i18n="lang_done">Done</button>
+      </div>
+    </form>
+  </dialog>
 
   <main id="top">
     <section class="hero shell">
@@ -1274,6 +1355,7 @@
   </footer>
 
   <script src="./i18n.js"></script>
+  <script src="./lang-selector.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear().toString();
   </script>

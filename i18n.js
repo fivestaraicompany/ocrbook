@@ -1,7 +1,92 @@
 (function () {
-  // Supported language codes for this site.
-  // Add/Remove codes here only; translation files are loaded from ./i18n/{lang}.(json|js)
-  const SUPPORTED = ['en', 'ko', 'uk', 'ar', 'ca', 'zh-Hans', 'zh-Hant', 'hr', 'cs', 'da', 'nl', 'fi', 'fr', 'de', 'el', 'fr-CA', 'he', 'hi', 'hu', 'id', 'it', 'ja', 'ms', 'nb', 'pl', 'pt-BR', 'pt-PT', 'ro', 'ru', 'sk', 'es-MX', 'es', 'sv', 'th', 'tr', 'vi'];
+  // Keep this list aligned with fill_all_projects_ollama.py. Translation files
+  // are loaded from ./i18n/{lang}.js or ./i18n/ollama_{lang}.js.
+  const LANGUAGE_OPTIONS = Object.freeze([
+    { code: "en", name: "English" },
+    { code: "ko", name: "한국어" },
+    { code: "af", name: "Afrikaans" },
+    { code: "am", name: "አማርኛ" },
+    { code: "ar", name: "العربية" },
+    { code: "az", name: "Azərbaycan dili" },
+    { code: "be", name: "Беларуская" },
+    { code: "bg", name: "Български" },
+    { code: "bn", name: "বাংলা" },
+    { code: "bs", name: "Bosanski" },
+    { code: "ca", name: "Català" },
+    { code: "cs", name: "Čeština" },
+    { code: "da", name: "Dansk" },
+    { code: "de", name: "Deutsch" },
+    { code: "el", name: "Ελληνικά" },
+    { code: "es", name: "Español" },
+    { code: "es-MX", name: "Español (México)" },
+    { code: "es-US", name: "Español (Estados Unidos)" },
+    { code: "et", name: "Eesti" },
+    { code: "fa", name: "فارسی" },
+    { code: "fi", name: "Suomi" },
+    { code: "fil", name: "Filipino" },
+    { code: "fr", name: "Français" },
+    { code: "fr-CA", name: "Français (Canada)" },
+    { code: "gu", name: "ગુજરાતી" },
+    { code: "ha", name: "Hausa" },
+    { code: "he", name: "עברית" },
+    { code: "hi", name: "हिन्दी" },
+    { code: "hr", name: "Hrvatski" },
+    { code: "hu", name: "Magyar" },
+    { code: "hy", name: "Հայերեն" },
+    { code: "id", name: "Bahasa Indonesia" },
+    { code: "ig", name: "Igbo" },
+    { code: "it", name: "Italiano" },
+    { code: "ja", name: "日本語" },
+    { code: "ka", name: "ქართული" },
+    { code: "kk", name: "Қазақ тілі" },
+    { code: "kn", name: "ಕನ್ನಡ" },
+    { code: "ln", name: "Lingála" },
+    { code: "lt", name: "Lietuvių" },
+    { code: "lv", name: "Latviešu" },
+    { code: "mk", name: "Македонски" },
+    { code: "ml", name: "മലയാളം" },
+    { code: "mn", name: "Монгол" },
+    { code: "mr", name: "मराठी" },
+    { code: "ms", name: "Bahasa Melayu" },
+    { code: "my", name: "မြန်မာ" },
+    { code: "nb", name: "Norsk bokmål" },
+    { code: "ne", name: "नेपाली" },
+    { code: "nl", name: "Nederlands" },
+    { code: "om", name: "Afaan Oromoo" },
+    { code: "or", name: "ଓଡ଼ିଆ" },
+    { code: "pa", name: "ਪੰਜਾਬੀ" },
+    { code: "pcm", name: "Naijá Píjin" },
+    { code: "pl", name: "Polski" },
+    { code: "pt-BR", name: "Português (Brasil)" },
+    { code: "pt-PT", name: "Português (Portugal)" },
+    { code: "ro", name: "Română" },
+    { code: "ru", name: "Русский" },
+    { code: "rw", name: "Ikinyarwanda" },
+    { code: "si", name: "සිංහල" },
+    { code: "sk", name: "Slovenčina" },
+    { code: "sl", name: "Slovenščina" },
+    { code: "so", name: "Soomaali" },
+    { code: "sq", name: "Shqip" },
+    { code: "sr", name: "Српски" },
+    { code: "st", name: "Sesotho" },
+    { code: "sv", name: "Svenska" },
+    { code: "sw", name: "Kiswahili" },
+    { code: "ta", name: "தமிழ்" },
+    { code: "te", name: "తెలుగు" },
+    { code: "th", name: "ไทย" },
+    { code: "ti", name: "ትግርኛ" },
+    { code: "tr", name: "Türkçe" },
+    { code: "ts", name: "XiTsonga" },
+    { code: "uk", name: "Українська" },
+    { code: "ur", name: "اردو" },
+    { code: "vi", name: "Tiếng Việt" },
+    { code: "yo", name: "Yorùbá" },
+    { code: "zh-HK", name: "繁體中文（香港）" },
+    { code: "zh-Hans", name: "简体中文" },
+    { code: "zh-Hant", name: "繁體中文" },
+    { code: "zu", name: "isiZulu" }
+  ]);
+  const SUPPORTED = LANGUAGE_OPTIONS.map((item) => item.code);
   const STORAGE_KEY = "ocrbook_lang";
 
   // Get namespace prefix from script tag (e.g., data-i18n-prefix="ollama")
@@ -136,7 +221,19 @@
       const dict = await load("en");
       apply(dict);
     }
+    document.dispatchEvent(new CustomEvent("ocrbook:languagechange", {
+      detail: { language: lang }
+    }));
   }
+
+  // Shared public API used by lang-selector.js. This removes the old
+  // dependency on one hidden HTML button per language.
+  window.OCRBookI18n = Object.freeze({
+    languages: LANGUAGE_OPTIONS,
+    supported: Object.freeze([...SUPPORTED]),
+    normalize,
+    setLang
+  });
 
   function init() {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -154,10 +251,10 @@
       langSelect.addEventListener("change", () => setLang(langSelect.value));
       // Populate select if empty
       if (langSelect.options.length === 0) {
-        SUPPORTED.forEach((code) => {
+        LANGUAGE_OPTIONS.forEach(({ code, name }) => {
           const opt = document.createElement("option");
           opt.value = code;
-          opt.textContent = code;
+          opt.textContent = `${name} (${code})`;
           langSelect.appendChild(opt);
         });
       }

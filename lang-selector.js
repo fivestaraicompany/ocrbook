@@ -2,44 +2,8 @@
 // Provides a unified language selection UI for all pages
 
 (function () {
-  const SUPPORTED = [
-    { code: "en", name: "English" },
-    { code: "ko", name: "한국어" },
-    { code: "uk", name: "Українська" },
-    { code: "ar", name: "العربية" },
-    { code: "ca", name: "Català" },
-    { code: "zh-Hans", name: "简体中文" },
-    { code: "zh-Hant", name: "繁體中文" },
-    { code: "hr", name: "Hrvatski" },
-    { code: "cs", name: "Čeština" },
-    { code: "da", name: "Dansk" },
-    { code: "nl", name: "Nederlands" },
-    { code: "fi", name: "Suomi" },
-    { code: "fr", name: "Français" },
-    { code: "de", name: "Deutsch" },
-    { code: "el", name: "Ελληνικά" },
-    { code: "fr-CA", name: "Français (Canada)" },
-    { code: "he", name: "עברית" },
-    { code: "hi", name: "हिन्दी" },
-    { code: "hu", name: "Magyar" },
-    { code: "id", name: "Bahasa Indonesia" },
-    { code: "it", name: "Italiano" },
-    { code: "ja", name: "日本語" },
-    { code: "ms", name: "Bahasa Melayu" },
-    { code: "nb", name: "Norsk bokmål" },
-    { code: "pl", name: "Polski" },
-    { code: "pt-BR", name: "Português (Brasil)" },
-    { code: "pt-PT", name: "Português (Portugal)" },
-    { code: "ro", name: "Română" },
-    { code: "ru", name: "Русский" },
-    { code: "sk", name: "Slovenčina" },
-    { code: "es-MX", name: "Español (México)" },
-    { code: "es", name: "Español" },
-    { code: "sv", name: "Svenska" },
-    { code: "th", name: "ไทย" },
-    { code: "tr", name: "Türkçe" },
-    { code: "vi", name: "Tiếng Việt" }
-  ];
+  const i18n = window.OCRBookI18n;
+  const SUPPORTED = i18n?.languages || [{ code: "en", name: "English" }];
 
   function initLangSelector() {
     const openBtn = document.getElementById("langOpen");
@@ -51,6 +15,8 @@
     if (!openBtn || !dialog || !list || !search || !current) return;
 
     function getCurrentLang() {
+      const current = document.documentElement.lang;
+      if (SUPPORTED.some((item) => item.code === current)) return current;
       const pressed = document.querySelector('[data-lang-btn][aria-pressed="true"]');
       return pressed ? pressed.getAttribute("data-lang-btn") : "en";
     }
@@ -85,8 +51,12 @@
           <div aria-hidden="true">${x.code === cur ? "✓" : ""}</div>
         `;
         btn.addEventListener("click", () => {
-          const hidden = document.querySelector(`[data-lang-btn="${cssEscape(x.code)}"]`);
-          if (hidden) hidden.click();
+          if (i18n?.setLang) {
+            i18n.setLang(x.code).catch((error) => console.error(error));
+          } else {
+            const hidden = document.querySelector(`[data-lang-btn="${cssEscape(x.code)}"]`);
+            if (hidden) hidden.click();
+          }
           setCurrentLabel();
           if (dialog.open) dialog.close();
           openBtn.setAttribute("aria-expanded", "false");
@@ -142,6 +112,7 @@
       attributeFilter: ['aria-pressed'],
       subtree: true
     });
+    document.addEventListener("ocrbook:languagechange", setCurrentLabel);
   }
 
   // Initialize when DOM is ready
@@ -151,4 +122,3 @@
     initLangSelector();
   }
 })();
-

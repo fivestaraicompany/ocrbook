@@ -86,7 +86,14 @@
     { code: "zh-Hant", name: "繁體中文" },
     { code: "zu", name: "isiZulu" }
   ]);
-  const SUPPORTED = LANGUAGE_OPTIONS.map((item) => item.code);
+  const pageLanguageCodes = (document.documentElement.dataset.i18nLanguages || "")
+    .split(",")
+    .map((code) => code.trim())
+    .filter(Boolean);
+  const ACTIVE_LANGUAGE_OPTIONS = pageLanguageCodes.length
+    ? LANGUAGE_OPTIONS.filter((item) => pageLanguageCodes.includes(item.code))
+    : LANGUAGE_OPTIONS;
+  const SUPPORTED = ACTIVE_LANGUAGE_OPTIONS.map((item) => item.code);
   const STORAGE_KEY = "ocrbook_lang";
 
   // Get namespace prefix from script tag (e.g., data-i18n-prefix="ollama")
@@ -229,7 +236,7 @@
   // Shared public API used by lang-selector.js. This removes the old
   // dependency on one hidden HTML button per language.
   window.OCRBookI18n = Object.freeze({
-    languages: LANGUAGE_OPTIONS,
+    languages: ACTIVE_LANGUAGE_OPTIONS,
     supported: Object.freeze([...SUPPORTED]),
     normalize,
     setLang
@@ -251,7 +258,7 @@
       langSelect.addEventListener("change", () => setLang(langSelect.value));
       // Populate select if empty
       if (langSelect.options.length === 0) {
-        LANGUAGE_OPTIONS.forEach(({ code, name }) => {
+        ACTIVE_LANGUAGE_OPTIONS.forEach(({ code, name }) => {
           const opt = document.createElement("option");
           opt.value = code;
           opt.textContent = `${name} (${code})`;

@@ -1,0 +1,7 @@
+{
+  "name": "ocrbook-home",
+  "private": true,
+  "scripts": {
+    "build": "node build-site.mjs"
+  }
+}

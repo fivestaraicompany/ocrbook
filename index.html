@@ -1,497 +1,1279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-languages="en">
 <head>
   <meta charset="UTF-8" />
-  <title data-i18n="meta_title">OCRBook — Turn Scanned PDFs into Real Text</title>
+  <title data-i18n="home_meta_title">OCRBook — Make Scanned Books Readable</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="" data-i18n-attr="content:meta_desc" />
+  <meta
+    name="description"
+    content="Turn scanned PDFs and images into searchable text, then read, listen, summarize, and ask questions with your own local AI."
+    data-i18n-attr="content:home_meta_desc"
+  />
   <meta name="robots" content="index,follow" />
-  <link rel="stylesheet" href="./lang-selector.css" />
+  <meta name="theme-color" content="#f7fbff" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
 
   <style>
     :root {
-      --bg: #ffffff;
-      --panel: #ffffff;
-      --fg: #0b1220;
-      --muted: #5a647a;
-      --border: rgba(15, 23, 42, 0.10);
-      --shadow: 0 18px 60px rgba(2, 6, 23, 0.10);
-      --accent: #2563eb;
-      --accent2: #7c3aed;
-      --accentSoft: rgba(37, 99, 235, 0.10);
-      --radius: 18px;
-      --max: 1040px;
-      --pad: 22px;
+      --ink: #12213f;
+      --muted: #5f6e89;
+      --blue: #1769e0;
+      --blue-dark: #0a3d91;
+      --cyan: #37c8ed;
+      --mint: #bff2df;
+      --sun: #ffe59b;
+      --peach: #ffd8c4;
+      --lavender: #dcd9ff;
+      --paper: #fffdf8;
+      --white: #ffffff;
+      --line: rgba(20, 65, 122, 0.12);
+      --shadow: 0 24px 70px rgba(51, 91, 150, 0.14);
+      --max: 1160px;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #050816;
-        --panel: rgba(5, 8, 22, 0.92);
-        --fg: #f5f7ff;
-        --muted: #a2abc6;
-        --border: rgba(148, 163, 184, 0.18);
-        --shadow: 0 24px 90px rgba(0, 0, 0, 0.70);
-        --accentSoft: rgba(79, 156, 255, 0.12);
-        --accent: #4f9cff;
-        --accent2: #8a6dff;
-      }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      min-width: 320px;
+      color: var(--ink);
       background:
-        radial-gradient(900px 520px at 20% 0%, rgba(37,99,235,0.22), transparent 55%),
-        radial-gradient(900px 520px at 80% 0%, rgba(124,58,237,0.18), transparent 55%),
-        var(--bg);
-      color: var(--fg);
+        radial-gradient(circle at 7% 8%, rgba(255, 229, 155, 0.7), transparent 25rem),
+        radial-gradient(circle at 92% 13%, rgba(191, 242, 223, 0.65), transparent 26rem),
+        linear-gradient(180deg, #f7fbff 0%, #fffdf8 48%, #f6fbff 100%);
+      font-family: Inter, ui-rounded, "SF Pro Rounded", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    a { color: inherit; text-decoration: none; }
-    a:hover { color: var(--accent); }
-
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 20px var(--pad) 48px; }
-    header {
-      display: flex; align-items: center; justify-content: space-between; gap: 14px;
-      padding: 10px 0 18px;
-      position: sticky; top: 0;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.88), rgba(255,255,255,0));
-      backdrop-filter: blur(10px);
-    }
-    @media (prefers-color-scheme: dark) {
-      header { background: linear-gradient(to bottom, rgba(5,8,22,0.88), rgba(5,8,22,0)); }
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; min-width: 210px; }
-    .mark {
-      width: 40px; height: 40px; border-radius: 14px;
-      background: conic-gradient(from 180deg, var(--accent), var(--accent2), #2df2c8, var(--accent));
-      box-shadow: 0 0 28px rgba(37,99,235,0.35);
-      display: grid; place-items: center;
-      color: #050816; font-weight: 800;
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
     }
-    .brand h1 { font-size: 16px; font-weight: 750; letter-spacing: 0.2px; }
-    .tagline { font-size: 12px; color: var(--muted); }
 
-    nav { display: flex; align-items: center; gap: 18px; font-size: 14px; color: var(--muted); }
-    nav a { padding: 8px 10px; border-radius: 999px; }
-    nav a:hover { background: var(--accentSoft); color: var(--accent); }
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(23, 105, 224, 0.28);
+      outline-offset: 4px;
+      border-radius: 10px;
+    }
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: calc(var(--radius) + 6px);
+    .shell {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 20;
+      top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 14px;
+      padding: 10px 12px 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 12px 40px rgba(53, 91, 145, 0.09);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: max-content;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      box-shadow: 0 8px 20px rgba(25, 91, 203, 0.24);
+    }
+
+    .brand-name {
+      display: block;
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tagline {
+      display: block;
+      margin-top: -2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #53627c;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    nav a {
+      padding: 9px 11px;
+      border-radius: 12px;
+      transition: 160ms ease;
+    }
+
+    nav a:hover {
+      color: var(--blue);
+      background: #edf5ff;
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 15px;
+      border-radius: 14px;
+      color: var(--white);
+      background: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .header-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(18, 33, 63, 0.18);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+      align-items: center;
+      gap: 46px;
+      min-height: 680px;
+      padding: 86px 0 72px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 7px 12px;
+      border: 1px solid rgba(23, 105, 224, 0.14);
+      border-radius: 999px;
+      color: var(--blue-dark);
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #30cda5;
+      box-shadow: 0 0 0 4px rgba(48, 205, 165, 0.14);
+      content: "";
+    }
+
+    .hero h1 {
+      max-width: 740px;
+      font-size: clamp(46px, 6.2vw, 78px);
+      font-weight: 900;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+
+    .hero h1 span {
+      color: var(--blue);
+    }
+
+    .hero-copy {
+      max-width: 620px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 13px 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+      font-weight: 850;
+      box-shadow: 0 10px 30px rgba(45, 84, 140, 0.08);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(45, 84, 140, 0.14);
+    }
+
+    .button.primary {
+      border-color: transparent;
+      color: var(--white);
+      background: linear-gradient(135deg, #1769e0, #0952be);
+      box-shadow: 0 15px 34px rgba(23, 105, 224, 0.26);
+    }
+
+    .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 24px;
+      color: #68758d;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .platforms span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .platforms span::before {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--cyan);
+      content: "";
+    }
+
+    .hero-art {
+      position: relative;
+      display: grid;
+      min-height: 500px;
+      place-items: center;
+    }
+
+    .orbit {
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      border: 1px dashed rgba(23, 105, 224, 0.18);
+      border-radius: 50%;
+      animation: drift 12s ease-in-out infinite;
+    }
+
+    .orbit::before,
+    .orbit::after {
+      position: absolute;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .orbit::before {
+      top: 25px;
+      right: 42px;
+      width: 58px;
+      height: 58px;
+      background: var(--sun);
+      box-shadow: 0 10px 25px rgba(219, 166, 45, 0.15);
+    }
+
+    .orbit::after {
+      bottom: 32px;
+      left: 34px;
+      width: 42px;
+      height: 42px;
+      background: var(--mint);
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: rotate(-2deg) translateY(0); }
+      50% { transform: rotate(2deg) translateY(-8px); }
+    }
+
+    .icon-stage {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      width: 310px;
+      height: 356px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 46px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.98), transparent 45%),
+        linear-gradient(145deg, rgba(213, 240, 255, 0.94), rgba(232, 251, 242, 0.9));
+      box-shadow: 0 32px 90px rgba(41, 101, 178, 0.22);
+      transform: rotate(2deg);
+    }
+
+    .hero-icon {
+      width: 218px;
+      height: 218px;
+      border-radius: 50px;
+      box-shadow: 0 26px 56px rgba(16, 67, 155, 0.34);
+      transform: rotate(-2deg);
+    }
+
+    .float-card {
+      position: absolute;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: 220px;
+      padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 15px 40px rgba(59, 92, 141, 0.14);
+      backdrop-filter: blur(12px);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .float-card .mini {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    .float-card.top {
+      top: 82px;
+      left: 3px;
+      transform: rotate(-3deg);
+    }
+
+    .float-card.bottom {
+      right: -5px;
+      bottom: 90px;
+      transform: rotate(2deg);
+    }
+
+    .float-icon {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 11px;
+      background: #eaf4ff;
+      font-size: 17px;
+    }
+
+    .section {
+      padding: 92px 0;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(300px, 0.55fr);
+      align-items: end;
+      gap: 50px;
+      margin-bottom: 34px;
+    }
+
+    .section-label {
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      max-width: 700px;
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 1.06;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .whats-new {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(58, 137, 225, 0.15);
+      border-radius: 34px;
+      background: linear-gradient(135deg, #eaf6ff 0%, #f2fff8 52%, #fff9e8 100%);
       box-shadow: var(--shadow);
     }
 
-    .hero { padding: 28px; display: grid; gap: 22px; }
-    @media (min-width: 860px) { .hero { grid-template-columns: 1.15fr 0.85fr; align-items: start; } }
-
-    .hero h2 {
-      font-size: clamp(30px, 4vw, 42px);
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
+    .whats-new::after {
+      position: absolute;
+      top: -90px;
+      right: -60px;
+      width: 270px;
+      height: 270px;
+      border: 54px solid rgba(255, 255, 255, 0.42);
+      border-radius: 50%;
+      content: "";
     }
-    .hero p { color: var(--muted); font-size: 16px; margin-bottom: 16px; max-width: 58ch; }
-    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
-    .badge {
-      font-size: 12px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.40);
+
+    .new-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: 54px;
+      padding: 54px;
+    }
+
+    .new-copy h3 {
+      margin-bottom: 18px;
+      font-size: clamp(31px, 3.6vw, 47px);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 1.04;
+    }
+
+    .new-copy > p {
       color: var(--muted);
-    }
-    @media (prefers-color-scheme: dark) { .badge { background: rgba(10,16,34,0.45); } }
-
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 12px 16px; border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.65);
-      font-weight: 700; font-size: 14px;
-      cursor: pointer;
-    }
-    @media (prefers-color-scheme: dark) { .btn { background: rgba(10,16,34,0.55); } }
-    .btn.primary {
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #050816;
-      box-shadow: 0 14px 38px rgba(37,99,235,0.35);
+      font-size: 16px;
     }
 
-    .panel {
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background:
-        radial-gradient(600px 220px at 0% 0%, rgba(37,99,235,0.16), transparent 60%),
-        radial-gradient(600px 220px at 100% 0%, rgba(124,58,237,0.12), transparent 60%),
-        rgba(255,255,255,0.5);
-      padding: 16px;
+    .new-points {
+      display: grid;
+      gap: 15px;
+      margin-top: 26px;
+      list-style: none;
     }
-    @media (prefers-color-scheme: dark) { .panel { background: rgba(10,16,34,0.45); } }
-    .panel h3 { font-size: 14px; letter-spacing: 0.02em; margin-bottom: 10px; }
-    .panel ul { display: grid; gap: 10px; list-style: none; color: var(--muted); font-size: 14px; }
-    .panel li { display: flex; gap: 10px; }
-    .dot { width: 9px; height: 9px; margin-top: 7px; border-radius: 999px; background: linear-gradient(135deg, var(--accent), var(--accent2)); flex: 0 0 auto; }
 
-    section { margin-top: 22px; padding: 22px; }
-    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
-    .sec-head h3 { font-size: 18px; }
-    .sec-sub { color: var(--muted); font-size: 14px; }
+    .new-points li {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 11px;
+      color: #435370;
+      font-size: 14px;
+    }
 
-    .grid { display: grid; gap: 12px; }
-    @media (min-width: 860px) { .grid.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (min-width: 860px) { .grid.cols4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .new-points strong {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+    }
 
-    .feat {
-      border-radius: 16px; border: 1px solid var(--border);
+    .check {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border-radius: 9px;
+      color: #087e61;
+      background: var(--mint);
+      font-weight: 900;
+    }
+
+    .planner {
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.98);
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 22px 55px rgba(63, 100, 151, 0.16);
+      backdrop-filter: blur(12px);
+    }
+
+    .planner-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 2px 3px 14px;
+    }
+
+    .planner-title {
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .doc-meta {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .planner-row {
+      margin-top: 10px;
       padding: 14px;
-      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fbfdff;
     }
-    @media (prefers-color-scheme: dark) { .feat { background: rgba(10,16,34,0.45); } }
-    .feat b { display: block; margin-bottom: 6px; }
-    .feat p { color: var(--muted); font-size: 13px; }
+
+    .row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .help-dot {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--blue);
+      background: #e7f1ff;
+      font-size: 11px;
+    }
+
+    .segments {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      padding: 4px;
+      border-radius: 11px;
+      background: #edf1f6;
+      color: #738096;
+      font-size: 10px;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .segments span {
+      padding: 6px 2px;
+      border-radius: 8px;
+    }
+
+    .segments .selected {
+      color: var(--blue-dark);
+      background: var(--white);
+      box-shadow: 0 3px 10px rgba(35, 72, 123, 0.12);
+    }
+
+    .plan-result {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 11px;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 17px;
+      color: #13447d;
+      background: #e8f5ff;
+    }
+
+    .plan-symbol {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 13px;
+      background: #d4eaff;
+      font-size: 20px;
+    }
+
+    .plan-result strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .plan-result small {
+      color: #5e7898;
+      font-size: 10px;
+    }
+
+    .call-count {
+      padding: 5px 8px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      min-height: 238px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 15px 42px rgba(54, 91, 144, 0.08);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 52px rgba(54, 91, 144, 0.13);
+    }
+
+    .feature-card:nth-child(1) { background: linear-gradient(145deg, #ffffff, #eef7ff); }
+    .feature-card:nth-child(2) { background: linear-gradient(145deg, #ffffff, #effdf7); }
+    .feature-card:nth-child(3) { background: linear-gradient(145deg, #ffffff, #fff8e7); }
+    .feature-card:nth-child(4) { background: linear-gradient(145deg, #ffffff, #f3f0ff); }
+    .feature-card:nth-child(5) { background: linear-gradient(145deg, #ffffff, #fff1eb); }
+    .feature-card:nth-child(6) { background: linear-gradient(145deg, #ffffff, #edf9ff); }
+
+    .feature-icon {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 30px;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 8px 22px rgba(49, 86, 135, 0.1);
+      font-size: 22px;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
 
     .step {
-      border-radius: 16px; border: 1px dashed rgba(148,163,184,0.40);
-      padding: 14px; background: rgba(255,255,255,0.45);
+      position: relative;
+      min-height: 205px;
+      padding: 24px 20px;
+      border: 1px solid var(--line);
+      border-radius: 23px;
+      background: rgba(255, 255, 255, 0.7);
     }
-    @media (prefers-color-scheme: dark) { .step { background: rgba(10,16,34,0.35); } }
-    .kicker {
-      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 6px; display: inline-block;
+
+    .step::after {
+      position: absolute;
+      top: 43px;
+      right: -12px;
+      z-index: 2;
+      color: #86a7cd;
+      content: "→";
+      font-size: 18px;
+      font-weight: 900;
     }
-    .step p { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+    .step:last-child::after {
+      content: none;
+    }
+
+    .step-number {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 26px;
+      place-items: center;
+      border-radius: 11px;
+      color: var(--white);
+      background: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin-bottom: 7px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ai-banner {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      align-items: center;
+      gap: 40px;
+      padding: 46px 50px;
+      border-radius: 31px;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 84% 20%, rgba(55, 200, 237, 0.28), transparent 15rem),
+        linear-gradient(135deg, #0b347a, #0b5fc9);
+      box-shadow: 0 26px 70px rgba(10, 66, 150, 0.26);
+    }
+
+    .ai-banner .section-label {
+      color: #8fe9ff;
+    }
+
+    .ai-banner h2 {
+      margin-bottom: 12px;
+      font-size: clamp(31px, 4vw, 47px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.04;
+    }
+
+    .ai-banner p {
+      max-width: 720px;
+      color: #d6e8ff;
+      font-size: 15px;
+    }
+
+    .ai-banner .button {
+      min-width: 190px;
+      border-color: rgba(255, 255, 255, 0.22);
+      color: #0b3f88;
+      background: var(--white);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 11px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
 
     details {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.55);
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
     }
-    @media (prefers-color-scheme: dark) { details { background: rgba(10,16,34,0.45); } }
-    details + details { margin-top: 10px; }
-    summary { cursor: pointer; font-weight: 700; }
-    summary::marker { color: var(--accent); }
 
-    footer {
-      margin-top: 18px;
-      padding: 14px 4px 0;
-      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
-      color: var(--muted); font-size: 12px;
+    summary {
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 850;
     }
-    .footlinks { display: flex; gap: 14px; flex-wrap: wrap; }
-    .muted { color: var(--muted); }
+
+    details p {
+      padding-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .site-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 32px;
+      padding: 26px 0 34px;
+      color: #718099;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-weight: 750;
+    }
+
+    .footer-links a:hover {
+      color: var(--blue);
+    }
+
+    @media (max-width: 960px) {
+      nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding-top: 72px;
+        text-align: center;
+      }
+
+      .hero-copy {
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .hero-actions,
+      .platforms {
+        justify-content: center;
+      }
+
+      .hero-art {
+        min-height: 480px;
+      }
+
+      .section-heading {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .new-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .step:nth-child(2)::after {
+        content: none;
+      }
+    }
+
+    @media (max-width: 660px) {
+      .shell {
+        width: min(calc(100% - 24px), var(--max));
+      }
+
+      .site-header {
+        top: 8px;
+        margin-top: 8px;
+      }
+
+      .brand-tagline,
+      .header-cta {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 62px 0 44px;
+      }
+
+      .hero h1 {
+        font-size: clamp(42px, 14vw, 58px);
+      }
+
+      .hero-art {
+        min-height: 408px;
+      }
+
+      .orbit {
+        width: 330px;
+        height: 330px;
+      }
+
+      .icon-stage {
+        width: 242px;
+        height: 290px;
+        border-radius: 36px;
+      }
+
+      .hero-icon {
+        width: 172px;
+        height: 172px;
+        border-radius: 40px;
+      }
+
+      .float-card.top {
+        top: 54px;
+        left: 0;
+      }
+
+      .float-card.bottom {
+        right: 0;
+        bottom: 53px;
+      }
+
+      .section {
+        padding: 66px 0;
+      }
+
+      .new-grid {
+        gap: 34px;
+        padding: 30px 20px;
+      }
+
+      .feature-grid,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-card {
+        min-height: auto;
+      }
+
+      .step {
+        min-height: auto;
+      }
+
+      .step::after {
+        content: none;
+      }
+
+      .ai-banner {
+        grid-template-columns: 1fr;
+        padding: 34px 24px;
+      }
+
+      .ai-banner .button {
+        width: 100%;
+      }
+
+      .site-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .orbit {
+        animation: none;
+      }
+
+      .button,
+      .header-cta,
+      .feature-card {
+        transition: none;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="mark">O</div>
-        <div>
-          <h1>OCRBook</h1>
-          <div class="tagline" data-i18n="brand_tagline">Read scanned books like real text.</div>
+  <header class="site-header shell">
+    <a class="brand" href="#top" aria-label="OCRBook home">
+      <img class="brand-icon" src="./assets/ocrbook-app-icon.png" alt="" width="44" height="44" />
+      <span>
+        <span class="brand-name">OCRBook</span>
+        <span class="brand-tagline" data-i18n="home_brand_tagline">A brighter way to read scans</span>
+      </span>
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <a href="#new" data-i18n="home_nav_new">What's new</a>
+      <a href="#features" data-i18n="home_nav_features">Features</a>
+      <a href="#how" data-i18n="home_nav_how">How it works</a>
+      <a href="#faq" data-i18n="home_nav_faq">FAQ</a>
+    </nav>
+
+    <a class="header-cta" href="https://apps.apple.com/kr/app/ocrbook/id6755219492" data-i18n="home_nav_download">
+      Download
+    </a>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div>
+        <div class="eyebrow" data-i18n="home_hero_eyebrow">OCR + local AI reading</div>
+        <h1 data-i18n="home_hero_title">Give every scanned page a <span>second life.</span></h1>
+        <p class="hero-copy" data-i18n="home_hero_body">
+          OCRBook turns scanned PDFs and images into clean, searchable text. Read comfortably, listen with text-to-speech, or explore an entire book with your own Ollama server.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="https://apps.apple.com/kr/app/ocrbook/id6755219492">
+            <span aria-hidden="true"></span>
+            <span data-i18n="home_cta_appstore">Get it on the App Store</span>
+          </a>
+          <a class="button" href="#new">
+            <span aria-hidden="true">✦</span>
+            <span data-i18n="home_cta_new">See the new smart workflow</span>
+          </a>
+        </div>
+
+        <div class="platforms" aria-label="Highlights">
+          <span data-i18n="home_platforms">iPhone, iPad &amp; Mac</span>
+          <span data-i18n="home_offline">On-device OCR</span>
+          <span data-i18n="home_private">No ads or tracking</span>
         </div>
       </div>
 
-      <nav aria-label="Primary">
-        <a href="#features" data-i18n="nav_features">Features</a>
-        <a href="#quickstart" data-i18n="nav_quickstart">Quick Start</a>
-        <a href="#ollama" data-i18n="nav_ollama">Ollama Setup</a>
-        <a href="#workflow" data-i18n="nav_workflow">Summarization</a>
-        <a href="#faq" data-i18n="nav_faq">FAQ</a>
-      </nav>
-
-            <div class="lang" aria-label="Language">
-        <button type="button" id="langOpen" class="lang-open" aria-haspopup="dialog" aria-controls="langDialog" aria-expanded="false" title="Language">
-          <span aria-hidden="true">🌐</span>
-          <span id="langCurrent">EN</span>
-        </button>
-
-        <!-- Hidden language buttons for i18n.js (kept for compatibility) -->
-        <div id="langHidden" hidden>
-          <button type="button" class="sr-only" data-lang-btn="en" aria-pressed="true">en</button>
-          <button type="button" class="sr-only" data-lang-btn="ko" aria-pressed="false">ko</button>
-          <button type="button" class="sr-only" data-lang-btn="uk" aria-pressed="false">uk</button>
-          <button type="button" class="sr-only" data-lang-btn="ar" aria-pressed="false">ar</button>
-          <button type="button" class="sr-only" data-lang-btn="ca" aria-pressed="false">ca</button>
-          <button type="button" class="sr-only" data-lang-btn="zh-Hans" aria-pressed="false">zh-Hans</button>
-          <button type="button" class="sr-only" data-lang-btn="zh-Hant" aria-pressed="false">zh-Hant</button>
-          <button type="button" class="sr-only" data-lang-btn="hr" aria-pressed="false">hr</button>
-          <button type="button" class="sr-only" data-lang-btn="cs" aria-pressed="false">cs</button>
-          <button type="button" class="sr-only" data-lang-btn="da" aria-pressed="false">da</button>
-          <button type="button" class="sr-only" data-lang-btn="nl" aria-pressed="false">nl</button>
-          <button type="button" class="sr-only" data-lang-btn="fi" aria-pressed="false">fi</button>
-          <button type="button" class="sr-only" data-lang-btn="fr" aria-pressed="false">fr</button>
-          <button type="button" class="sr-only" data-lang-btn="de" aria-pressed="false">de</button>
-          <button type="button" class="sr-only" data-lang-btn="el" aria-pressed="false">el</button>
-          <button type="button" class="sr-only" data-lang-btn="fr-CA" aria-pressed="false">fr-CA</button>
-          <button type="button" class="sr-only" data-lang-btn="he" aria-pressed="false">he</button>
-          <button type="button" class="sr-only" data-lang-btn="hi" aria-pressed="false">hi</button>
-          <button type="button" class="sr-only" data-lang-btn="hu" aria-pressed="false">hu</button>
-          <button type="button" class="sr-only" data-lang-btn="id" aria-pressed="false">id</button>
-          <button type="button" class="sr-only" data-lang-btn="it" aria-pressed="false">it</button>
-          <button type="button" class="sr-only" data-lang-btn="ja" aria-pressed="false">ja</button>
-          <button type="button" class="sr-only" data-lang-btn="ms" aria-pressed="false">ms</button>
-          <button type="button" class="sr-only" data-lang-btn="nb" aria-pressed="false">nb</button>
-          <button type="button" class="sr-only" data-lang-btn="pl" aria-pressed="false">pl</button>
-          <button type="button" class="sr-only" data-lang-btn="pt-BR" aria-pressed="false">pt-BR</button>
-          <button type="button" class="sr-only" data-lang-btn="pt-PT" aria-pressed="false">pt-PT</button>
-          <button type="button" class="sr-only" data-lang-btn="ro" aria-pressed="false">ro</button>
-          <button type="button" class="sr-only" data-lang-btn="ru" aria-pressed="false">ru</button>
-          <button type="button" class="sr-only" data-lang-btn="sk" aria-pressed="false">sk</button>
-          <button type="button" class="sr-only" data-lang-btn="es-MX" aria-pressed="false">es-MX</button>
-          <button type="button" class="sr-only" data-lang-btn="es" aria-pressed="false">es</button>
-          <button type="button" class="sr-only" data-lang-btn="sv" aria-pressed="false">sv</button>
-          <button type="button" class="sr-only" data-lang-btn="th" aria-pressed="false">th</button>
-          <button type="button" class="sr-only" data-lang-btn="tr" aria-pressed="false">tr</button>
-          <button type="button" class="sr-only" data-lang-btn="vi" aria-pressed="false">vi</button>
+      <div class="hero-art" aria-label="OCRBook app icon and feature highlights">
+        <div class="orbit"></div>
+        <div class="icon-stage">
+          <img
+            class="hero-icon"
+            src="./assets/ocrbook-app-icon.png"
+            alt="OCRBook app icon"
+            width="218"
+            height="218"
+          />
+        </div>
+        <div class="float-card top">
+          <span class="float-icon" aria-hidden="true">⌕</span>
+          <span>
+            <span data-i18n="home_float_ocr">Page-aware OCR</span>
+            <span class="mini" data-i18n="home_float_ocr_sub">Keeps every page in place</span>
+          </span>
+        </div>
+        <div class="float-card bottom">
+          <span class="float-icon" aria-hidden="true">✓</span>
+          <span>
+            <span data-i18n="home_float_ready">Ready to search</span>
+            <span class="mini" data-i18n="home_float_ready_sub">Copy, export, or listen</span>
+          </span>
         </div>
       </div>
-    </header>
+    </section>
 
-    <dialog id="langDialog" class="lang-dialog" aria-label="Select language">
-      <form method="dialog" class="lang-dialog-inner">
-        <div class="lang-dialog-head">
-          <div class="lang-dialog-title" data-i18n="lang_title">Language</div>
-          <button type="submit" class="lang-close" aria-label="Close">✕</button>
-        </div>
-
-        <div class="lang-search">
-          <input id="langSearch" type="search" placeholder="Search…" autocomplete="off" />
-        </div>
-
-        <div id="langList" class="lang-list" role="listbox" aria-label="Languages"></div>
-
-        <div class="lang-dialog-foot">
-          <button type="submit" class="btn" style="padding:10px 14px;" data-i18n="lang_done">Done</button>
-        </div>
-      </form>
-    </dialog>
-
-    <main class="card">
-      <section class="hero">
-        <div>
-          <h2 data-i18n="hero_title">Turn scanned PDFs into clean, searchable books.</h2>
-          <p data-i18n="hero_sub">
-            Import your scanned PDF, run OCR, then read it as real text — with page breaks and a layout that stays close to the original.
-          </p>
-
-          <div class="badges">
-            <span class="badge" data-i18n="badge_offline">Offline-friendly</span>
-            <span class="badge" data-i18n="badge_search">Fast search</span>
-            <span class="badge" data-i18n="badge_privacy">Privacy-first</span>
-          </div>
-
-          <div class="actions">
-            <!-- Replace href with your App Store URL when ready -->
-            <a class="btn primary" href="https://apps.apple.com/kr/app/ocrbook/id6755219492" aria-label="App Store">
-              <span></span>
-              <span data-i18n="cta_appstore">Get it on the App Store</span>
-            </a>
-            <a class="btn" href="#quickstart">
-              <span>⚡</span>
-              <span data-i18n="cta_guide">See the quick start</span>
-            </a>
-          </div>
-        </div>
-
-        <aside class="panel" aria-label="Summary">
-          <h3 data-i18n="panel_title">What you get</h3>
-          <ul>
-            <li><span class="dot"></span><span data-i18n="panel_item_1">PDF & image import (Files / iCloud / Share Sheet)</span></li>
-            <li><span class="dot"></span><span data-i18n="panel_item_2">TXT view for comfortable reading</span></li>
-            <li><span class="dot"></span><span data-i18n="panel_item_3">Search, copy, and export OCR text</span></li>
-            <li><span class="dot"></span><span data-i18n="panel_item_4">Optional AI tools (local Ollama supported)</span></li>
-          </ul>
-        </aside>
-      </section>
-
-      <section id="features">
-        <div class="sec-head">
-          <h3 data-i18n="sec_features_title">Key features</h3>
-          <div class="sec-sub" data-i18n="sec_features_sub">Everything you need to turn scanned books and documents into usable text.</div>
-        </div>
-
-        <div class="grid cols3">
-          <div class="feat">
-            <b data-i18n="f1_title">PDF & image import</b>
-            <p data-i18n="f1_body">Open from Files, iCloud Drive, or other apps. Keep everything organized in a simple library.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="f2_title">Page-aware OCR</b>
-            <p data-i18n="f2_body">Designed for long, multi-page scans. Keeps text aligned with each page for easy navigation.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="f3_title">TXT mode</b>
-            <p data-i18n="f3_body">Read as clean text with page breaks preserved — closer to an ebook, without losing context.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="f4_title">Search & copy</b>
-            <p data-i18n="f4_body">Jump to keywords instantly. Copy and share passages, or export the full OCR text.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="f5_title">TTS ready</b>
-            <p data-i18n="f5_body">Listen to long documents with system text-to-speech when enabled.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="f6_title">Private by design</b>
-            <p data-i18n="f6_body">Your files stay on device unless you choose to share or export. No ads, no tracking.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="quickstart">
-        <div class="sec-head">
-          <h3 data-i18n="sec_qs_title">Quick start</h3>
-          <div class="sec-sub" data-i18n="sec_qs_sub">From first launch to your first readable book in minutes.</div>
-        </div>
-
-        <div class="grid cols4">
-          <div class="step">
-            <span class="kicker">Step 1</span>
-            <strong data-i18n="step1_title">Import a scanned PDF</strong>
-            <p data-i18n="step1_body">Tap Import and select a PDF from Files, iCloud Drive, or Share Sheet.</p>
-          </div>
-          <div class="step">
-            <span class="kicker">Step 2</span>
-            <strong data-i18n="step2_title">Run OCR (all pages or a range)</strong>
-            <p data-i18n="step2_body">Choose full book OCR or only selected pages. Processing runs as efficiently as possible.</p>
-          </div>
-          <div class="step">
-            <span class="kicker">Step 3</span>
-            <strong data-i18n="step3_title">Switch to TXT view</strong>
-            <p data-i18n="step3_body">Tap TXT to read reconstructed text while keeping page breaks familiar.</p>
-          </div>
-          <div class="step">
-            <span class="kicker">Step 4</span>
-            <strong data-i18n="step4_title">Search & reuse</strong>
-            <p data-i18n="step4_body">Search for keywords, copy passages, and export text for notes or other tools.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="ollama">
-        <div class="sec-head">
-          <h3 data-i18n="sec_ollama_title">Local AI with Ollama (optional)</h3>
-          <div class="sec-sub" data-i18n="sec_ollama_sub">Prefer local processing? Connect OCRBook to your own Ollama server.</div>
-        </div>
-
-        <div class="grid">
-          <div class="feat">
-            <p class="muted" data-i18n="ollama_body">
-              Use Ollama to summarize, translate, or ask questions — while keeping content on your own machine. If you connect over plain HTTP, traffic may not be encrypted. Use a trusted network or HTTPS where possible.
+    <section id="new" class="section shell">
+      <div class="whats-new">
+        <div class="new-grid">
+          <div class="new-copy">
+            <div class="section-label" data-i18n="home_new_label">New in OCRBook</div>
+            <h3 data-i18n="home_new_title">A clear plan for even the longest books.</h3>
+            <p data-i18n="home_new_body">
+              The redesigned summary sheet makes local AI easier to understand. Pick what matters, preview the work, and stay in control from start to finish.
             </p>
-            <div style="margin-top:12px;">
-              <a class="btn primary" href="./tutorial/ollamasetuptutoral.html">
-                <span>🦙</span>
-                <span data-i18n="ollama_btn">Open Ollama setup tutorial</span>
-              </a>
+
+            <ul class="new-points">
+              <li>
+                <span class="check" aria-hidden="true">✓</span>
+                <span>
+                  <strong data-i18n="home_new_point1_title">Choose your context and summary length</strong>
+                  <span data-i18n="home_new_point1_body">Match your Ollama model from 4K to 128K, then choose a quick, standard, detailed, or custom-length summary.</span>
+                </span>
+              </li>
+              <li>
+                <span class="check" aria-hidden="true">✓</span>
+                <span>
+                  <strong data-i18n="home_new_point2_title">Preview every step before starting</strong>
+                  <span data-i18n="home_new_point2_body">See the strategy, estimated server calls, and a smarter context recommendation when a job is too large.</span>
+                </span>
+              </li>
+              <li>
+                <span class="check" aria-hidden="true">✓</span>
+                <span>
+                  <strong data-i18n="home_new_point3_title">Ask questions across the full document</strong>
+                  <span data-i18n="home_new_point3_body">Long documents are searched part by part instead of being silently cut off, and any running workflow can be cancelled.</span>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="planner" aria-label="Summary workflow preview">
+            <div class="planner-top">
+              <div>
+                <div class="planner-title" data-i18n="home_planner_title">Full Summary</div>
+                <div class="doc-meta" data-i18n="home_planner_meta">≈ 96K tokens · 402K characters</div>
+              </div>
+              <span class="help-dot" aria-hidden="true">i</span>
+            </div>
+
+            <div class="planner-row">
+              <div class="row-head">
+                <span data-i18n="home_planner_context">Context length</span>
+                <span class="help-dot" aria-hidden="true">i</span>
+              </div>
+              <div class="segments" aria-label="Context length preview">
+                <span>8K</span>
+                <span>16K</span>
+                <span class="selected">32K</span>
+                <span>64K</span>
+              </div>
+            </div>
+
+            <div class="planner-row">
+              <div class="row-head">
+                <span data-i18n="home_planner_length">Summary length</span>
+                <span class="help-dot" aria-hidden="true">i</span>
+              </div>
+              <div class="segments" aria-label="Summary length preview">
+                <span data-i18n="home_length_quick">Quick</span>
+                <span class="selected" data-i18n="home_length_standard">Standard</span>
+                <span data-i18n="home_length_detailed">Detailed</span>
+                <span data-i18n="home_length_custom">Custom</span>
+              </div>
+            </div>
+
+            <div class="plan-result">
+              <div class="plan-symbol" aria-hidden="true">⌘</div>
+              <div>
+                <strong data-i18n="home_plan_strategy">Hierarchical summary</strong>
+                <small data-i18n="home_plan_steps">Split → summarize → merge → write</small>
+              </div>
+              <div class="call-count" data-i18n="home_plan_calls">7 calls</div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="workflow">
-        <div class="sec-head">
-          <h3 data-i18n="sec_workflow_title">Smart summarization workflow</h3>
-          <div class="sec-sub" data-i18n="sec_workflow_sub">Long documents are split, summarized, and merged automatically — with a clear plan before OCRBook starts.</div>
+    <section id="features" class="section shell">
+      <div class="section-heading">
+        <div>
+          <div class="section-label" data-i18n="home_features_label">Everything in one reading space</div>
+          <h2 data-i18n="home_features_title">From paper scan to useful knowledge.</h2>
         </div>
+        <p data-i18n="home_features_body">
+          OCRBook is built for real documents: multi-page books, imperfect scans, long reading sessions, and private workflows.
+        </p>
+      </div>
 
-        <div class="grid cols3">
-          <div class="feat">
-            <b data-i18n="wf1_title">Configurable context length</b>
-            <p data-i18n="wf1_body">Match the plan to your Ollama server with a 4K–128K context length slider, so requests fit what your hardware can actually handle.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="wf2_title">See the plan before you run it</b>
-            <p data-i18n="wf2_body">OCRBook previews the exact strategy and number of server calls a summary will take — no surprises once it starts.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="wf3_title">Built for full books, not just pages</b>
-            <p data-i18n="wf3_body">When a document is too long for one response, OCRBook splits it into parts, summarizes each one, and merges the results automatically.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="wf4_title">Choose how long the summary should be</b>
-            <p data-i18n="wf4_body">Ask for a quick recap or a much longer, detailed summary — even for a very long book — and the workflow adjusts itself to match.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="wf5_title">Full-document chat that doesn't silently truncate</b>
-            <p data-i18n="wf5_body">Attach the whole document to chat. If it's too long for the context window, OCRBook scans it part by part for the answer instead of cutting it off.</p>
-          </div>
-          <div class="feat">
-            <b data-i18n="wf6_title">Cancel anytime</b>
-            <p data-i18n="wf6_body">Summarization and full-document chat run as a visible, step-by-step workflow that you can cancel at any point.</p>
-          </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">▤</div>
+          <h3 data-i18n="home_feature1_title">Import PDFs &amp; images</h3>
+          <p data-i18n="home_feature1_body">Bring in scans from Files, iCloud Drive, Photos, or the Share Sheet and keep them organized in one library.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">⌕</div>
+          <h3 data-i18n="home_feature2_title">Page-aware OCR</h3>
+          <p data-i18n="home_feature2_body">Recognize long, multi-page documents while keeping the text connected to its original page.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">Aa</div>
+          <h3 data-i18n="home_feature3_title">Comfortable TXT reading</h3>
+          <p data-i18n="home_feature3_body">Switch from the scan to clean text with familiar page breaks, fast search, copy, and full-text export.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">◖</div>
+          <h3 data-i18n="home_feature4_title">Listen with TTS</h3>
+          <p data-i18n="home_feature4_body">Turn recognized text into audio with system text-to-speech for hands-free reading and review.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">✦</div>
+          <h3 data-i18n="home_feature5_title">Private local AI</h3>
+          <p data-i18n="home_feature5_body">Connect an Ollama server you control to summarize, translate, and ask questions about your documents.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">文</div>
+          <h3 data-i18n="home_feature6_title">Made for global readers</h3>
+          <p data-i18n="home_feature6_body">Expanded app interface language support makes OCRBook more approachable for readers around the world.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="how" class="section shell">
+      <div class="section-heading">
+        <div>
+          <div class="section-label" data-i18n="home_how_label">Simple from the first page</div>
+          <h2 data-i18n="home_how_title">A book becomes searchable in four steps.</h2>
         </div>
+        <p data-i18n="home_how_body">
+          Keep the original PDF untouched while OCRBook creates a separate reading layer you can use however you like.
+        </p>
+      </div>
 
-        <div class="grid cols4" style="margin-top:12px;">
-          <div class="step">
-            <span class="kicker" data-i18n="wf_strategy1_kicker">Fits in one request</span>
-            <strong data-i18n="wf_strategy1_title">Single pass</strong>
-            <p data-i18n="wf_strategy1_body">The document fits your chosen context window, so one request produces the full summary.</p>
-          </div>
-          <div class="step">
-            <span class="kicker" data-i18n="wf_strategy2_kicker">Longer document</span>
-            <strong data-i18n="wf_strategy2_title">Map-reduce</strong>
-            <p data-i18n="wf_strategy2_body">The document is split into parts, each part is summarized, then the partial summaries are merged into one.</p>
-          </div>
-          <div class="step">
-            <span class="kicker" data-i18n="wf_strategy3_kicker">Very long document</span>
-            <strong data-i18n="wf_strategy3_title">Hierarchical merge</strong>
-            <p data-i18n="wf_strategy3_body">Partial summaries are merged over several rounds before the final summary is written.</p>
-          </div>
-          <div class="step">
-            <span class="kicker" data-i18n="wf_strategy4_kicker">Longer summary requested</span>
-            <strong data-i18n="wf_strategy4_title">Sectional summary</strong>
-            <p data-i18n="wf_strategy4_body">For long, detailed summary requests, the result is written as multiple sections and stitched together on your device.</p>
-          </div>
+      <div class="steps">
+        <article class="step">
+          <div class="step-number">01</div>
+          <h3 data-i18n="home_step1_title">Import</h3>
+          <p data-i18n="home_step1_body">Choose a scanned PDF or image from your device, iCloud, or another app.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">02</div>
+          <h3 data-i18n="home_step2_title">Recognize</h3>
+          <p data-i18n="home_step2_body">Run OCR for the whole book or just the page range you need.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">03</div>
+          <h3 data-i18n="home_step3_title">Read</h3>
+          <p data-i18n="home_step3_body">Open TXT view to search, copy, export, or listen to the recognized text.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">04</div>
+          <h3 data-i18n="home_step4_title">Understand</h3>
+          <p data-i18n="home_step4_body">Optionally connect Ollama for summaries, translation, and full-document Q&amp;A.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="ai-banner">
+        <div>
+          <div class="section-label" data-i18n="home_ai_label">Optional local intelligence</div>
+          <h2 data-i18n="home_ai_title">Your documents. Your server. Your choice.</h2>
+          <p data-i18n="home_ai_body">
+            OCR and reading work on device. If you enable Ollama, OCRBook sends selected or full-document text only to the server address you configure. Use a trusted network or HTTPS whenever possible.
+          </p>
         </div>
-      </section>
+        <a class="button" href="./tutorial/ollamasetuptutoral.html">
+          <span aria-hidden="true">🦙</span>
+          <span data-i18n="home_ai_cta">Open setup guide</span>
+        </a>
+      </div>
+    </section>
 
-      <section id="faq">
-        <div class="sec-head">
-          <h3 data-i18n="sec_faq_title">FAQ</h3>
-          <div class="sec-sub"> </div>
+    <section id="faq" class="section shell">
+      <div class="section-heading">
+        <div>
+          <div class="section-label" data-i18n="home_faq_label">Good to know</div>
+          <h2 data-i18n="home_faq_title">A few quick answers.</h2>
         </div>
+      </div>
 
+      <div class="faq-list">
         <details>
-          <summary data-i18n="faq1_q">Does OCRBook modify my original PDF?</summary>
-          <div class="muted" style="margin-top:10px;" data-i18n="faq1_a">No. Your original file stays untouched. OCR text is stored separately and you can switch between views anytime.</div>
+          <summary data-i18n="home_faq1_q">Does OCRBook change my original PDF?</summary>
+          <p data-i18n="home_faq1_a">No. Your original file stays untouched. OCR text is stored separately, so you can switch between the scan and TXT view anytime.</p>
         </details>
-
         <details>
-          <summary data-i18n="faq2_q">Does it work offline?</summary>
-          <div class="muted" style="margin-top:10px;" data-i18n="faq2_a">Yes. OCR and reading work offline. Optional integrations may require a network connection if you enable them.</div>
+          <summary data-i18n="home_faq2_q">Can I use OCRBook offline?</summary>
+          <p data-i18n="home_faq2_a">Yes. OCR and reading work offline. Ollama features need a network connection only when your configured server is on another device.</p>
         </details>
-
         <details>
-          <summary data-i18n="faq3_q">Can I export the OCR text?</summary>
-          <div class="muted" style="margin-top:10px;" data-i18n="faq3_a">Yes. Copy passages, share selected text, or export the full OCR result as a plain text file.</div>
+          <summary data-i18n="home_faq3_q">What happens with a very long document?</summary>
+          <p data-i18n="home_faq3_a">OCRBook plans around the context length you choose. It can split the document, summarize each part, and merge the results without silently dropping the end.</p>
         </details>
-      </section>
+        <details>
+          <summary data-i18n="home_faq4_q">Can I stop a summary after it starts?</summary>
+          <p data-i18n="home_faq4_a">Yes. The workflow shows visible progress and can be cancelled at any time, which stops OCRBook from sending further requests.</p>
+        </details>
+      </div>
+    </section>
+  </main>
 
-      <footer>
-        <div>© <span id="year"></span> OCRBook. FiveStar AI. <span data-i18n="footer_rights">All rights reserved.</span> <span class="muted">fivestaraicompany@gmail.com</span></div>
-        <div class="footlinks">
-          <a href="./privacy.html" data-i18n="footer_privacy">Privacy Policy</a>
-          <a href="#" data-i18n="footer_support">Support</a>
-          <a href="https://apps.apple.com/kr/app/ocrbook/id6755219492" data-i18n="footer_appstore">App Store</a>
-          <a href="./ollamasetuptutoral.html">Ollama</a>
-        </div>
-      </footer>
-    </main>
-  </div>
+  <footer class="site-footer shell">
+    <div>
+      © <span id="year"></span> OCRBook · FiveStar AI ·
+      <span data-i18n="home_footer_rights">All rights reserved.</span>
+    </div>
+    <div class="footer-links">
+      <a href="./privacy.html" data-i18n="home_footer_privacy">Privacy Policy</a>
+      <a href="mailto:fivestaraicompany@gmail.com" data-i18n="home_footer_support">Support</a>
+      <a href="https://apps.apple.com/kr/app/ocrbook/id6755219492" data-i18n="home_footer_appstore">App Store</a>
+    </div>
+  </footer>
 
   <script src="./i18n.js"></script>
-  <script src="./lang-selector.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear().toString();
   </script>

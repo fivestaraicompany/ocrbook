@@ -36,6 +36,8 @@
       --accent: var(--blue);
       --accentSoft: #edf5ff;
       --max: 1160px;
+      /* sticky header offset (top 14px + header height) + breathing room */
+      --anchor-offset: 116px;
     }
 
     * {
@@ -46,6 +48,17 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: var(--anchor-offset);
+    }
+
+    /* Keep in-page anchor targets clear of the sticky header. */
+    #top,
+    #downloads,
+    #new,
+    #features,
+    #how,
+    #faq {
+      scroll-margin-top: var(--anchor-offset);
     }
 
     body {
@@ -908,6 +921,10 @@
     }
 
     @media (max-width: 660px) {
+      :root {
+        --anchor-offset: 96px;
+      }
+
       .shell {
         width: min(calc(100% - 24px), var(--max));
       }
